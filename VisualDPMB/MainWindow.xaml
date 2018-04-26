@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VisualDPMB"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="White">
+        Title="MainWindow" Height="600" Width="800" Background="White">
     <Grid>
+        <Image Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Canvas Name="platno" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
     </Grid>
 </Window>
