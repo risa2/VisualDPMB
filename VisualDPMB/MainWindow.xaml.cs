@@ -17,31 +17,27 @@ namespace VisualDPMB
 		public float latitude, longitude;
 		public string course, headsign;
 		public string consist;
+		public double RelativeY(double min, double max)
+		{
+			return (latitude-min)/(max-min);
+		}
+		public double RelativeX(double min, double max)
+		{
+			return (longitude-min)/(max-min);
+		}
+		public bool IsTram()
+		{
+			return route<=13;
+		}
+		public bool IsBus()
+		{
+			return route>=40;
+		}
 	}
-	public class Vehicle
-    {
-        public VehicleInfo info;
-        public double RelativeY(double min, double max)
-        {
-            return (info.latitude - min) / (max - min);
-        }
-        public double RelativeX(double min, double max)
-        {
-            return (info.longitude - min) / (max - min);
-        }
-        public bool IsTram()
-        {
-            return info.route <= 13;
-        }
-        public bool IsBus()
-        {
-            return info.route >= 40;
-        }
-    }
 	public partial class MainWindow: Window
 	{
 		private SimpleTimer timer;
-		private List<Vehicle> vehicles;
+		private List<VehicleInfo> vehicles;
 		private JsonDownload<List<VehicleInfo>> vehicle_source = new JsonDownload<List<VehicleInfo>>("http://sotoris.cz/DataSource/CityHack2015/vehiclesBrno.aspx");
 		private void UpdateVehicles()
 		{
@@ -54,7 +50,10 @@ namespace VisualDPMB
 					Height = 4,
 					Fill = vehicle.IsTram()?Brushes.Red:vehicle.IsBus()?Brushes.Blue:Brushes.GreenYellow
 				};
-                e.MouseDown += (s, arg) => (from v in vehicles where v==vehicle select v).First();
+                e.MouseDown += (s, arg) => platno.Children.Add(new TextBox
+				{
+					Text=(from v in vehicles where v==vehicle select v).First().vehicleId.ToString()
+				});
 				Canvas.SetLeft(e, vehicle.RelativeX(16.4777558, 16.7327803)*platno.Width);
 				Canvas.SetTop(e, vehicle.RelativeY(49.1321760, 49.2905053)*platno.Height);
 				platno.Children.Add(e);
@@ -64,7 +63,7 @@ namespace VisualDPMB
 		{
 			try
 			{
-                vehicles = (from vehicle in vehicle_source.Download() select new Vehicle() { info = vehicle }).ToList<Vehicle>();
+                vehicles = vehicle_source.Download();
 			}
 			catch(HttpRequestException e)
 			{
