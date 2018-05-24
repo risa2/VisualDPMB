@@ -36,7 +36,9 @@ namespace VisualDPMB
 	}
 	public partial class MainWindow: Window
 	{
-		private SimpleTimer timer;
+        private double west = 16.4777558, east = 16.7327803, south = 49.1321760, north = 49.2905053;
+        private SimpleTimer timer;
+        private SimpleTimer hider;
 		private List<VehicleInfo> vehicles;
 		private JsonDownload<List<VehicleInfo>> vehicle_source = new JsonDownload<List<VehicleInfo>>("http://sotoris.cz/DataSource/CityHack2015/vehiclesBrno.aspx");
 		private void UpdateVehicles()
@@ -50,12 +52,15 @@ namespace VisualDPMB
 					Height = 4,
 					Fill = vehicle.IsTram()?Brushes.Red:vehicle.IsBus()?Brushes.Blue:Brushes.GreenYellow
 				};
-                e.MouseDown += (s, arg) => platno.Children.Add(new TextBox
-				{
-					Text=(from v in vehicles where v==vehicle select v).First().vehicleId.ToString()
-				});
-				Canvas.SetLeft(e, vehicle.RelativeX(16.4777558, 16.7327803)*platno.Width);
-				Canvas.SetTop(e, vehicle.RelativeY(49.1321760, 49.2905053)*platno.Height);
+                e.MouseDown += (s, arg) => {
+                    vehicle_caption.Visibility = Visibility.Visible;
+                    var vi = (from v in vehicles where v.vehicleId == vehicle.vehicleId select v).First();
+                    vehicle_caption.Content = "Číslo vozu: " + vi.vehicleId + " Linka: " + vi.route + " Cíl: " + vi.headsign;
+                    hider?.Stop();
+                    hider = new SimpleTimer(TimeSpan.FromSeconds(4), (es, earg) => { vehicle_caption.Visibility = Visibility.Hidden; hider.Stop(); });
+                };
+				Canvas.SetLeft(e, vehicle.RelativeX(west, east)*platno.Width);
+				Canvas.SetTop(e, vehicle.RelativeY(north, south) *platno.Height);
 				platno.Children.Add(e);
 			}
         }
@@ -81,7 +86,7 @@ namespace VisualDPMB
  
 			LoadVehicles();
 			UpdateVehicles();
-			timer=new SimpleTimer(TimeSpan.FromMilliseconds(1000), (s, e) => LoadVehicles());
+			timer=new SimpleTimer(TimeSpan.FromSeconds(1), (s, e) => LoadVehicles());
 			SizeChanged+=(s, e) => UpdateVehicles();
 		}
 	}

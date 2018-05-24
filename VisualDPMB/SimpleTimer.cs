@@ -13,5 +13,9 @@ namespace VisualDPMB
 			timer.Tick+=callback;
 			timer.Start();
 		}
+        public void Stop()
+        {
+            timer.Stop();
+        }
 	}
 }

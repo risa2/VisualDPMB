@@ -9,10 +9,11 @@
         Title="MainWindow" Height="600" Width="600" Background="White">
     <Grid>
         <paz:ZoomBorder Name="zoom_border" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Canvas Name="container" Width="600" Height="600" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid Name="container" Width="600" Height="600" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Image Width="600" Height="600" Name="image" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <Canvas Width="600" Height="600" Name="platno" HorizontalAlignment="Left" VerticalAlignment="Top" />
-            </Canvas>
+            </Grid>
         </paz:ZoomBorder>
+        <Label Name="vehicle_caption" VerticalAlignment="Bottom" Height="30" Visibility="Hidden" FontSize="16" Background="DarkBlue" Foreground="LightYellow"/>
     </Grid>
 </Window>
