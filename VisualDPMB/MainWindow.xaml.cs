@@ -55,7 +55,7 @@ namespace VisualDPMB
                 e.MouseDown += (s, arg) => {
                     vehicle_caption.Visibility = Visibility.Visible;
                     var vi = (from v in vehicles where v.vehicleId == vehicle.vehicleId select v).First();
-                    vehicle_caption.Content = "Číslo vozu: " + vi.vehicleId + " Linka: " + vi.route + " Cíl: " + vi.headsign;
+                    vehicle_caption.Content = "Číslo vozu: " + vi.vehicleId + " Linka: " + vi.route + " Cíl: " + vi.headsign+" Počet vozů: "+((vi.consist??"").Count(c=>c=='+')+1);
                     hider?.Stop();
                     hider = new SimpleTimer(TimeSpan.FromSeconds(4), (es, earg) => { vehicle_caption.Visibility = Visibility.Hidden; hider.Stop(); });
                 };
