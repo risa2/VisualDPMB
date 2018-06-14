@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Input;
 
 namespace VisualDPMB
 {
@@ -36,7 +36,7 @@ namespace VisualDPMB
 	}
 	public partial class MainWindow: Window
 	{
-        private double west = 16.4777558, east = 16.7327803, south = 49.1321760, north = 49.2905053;
+        private double west = 16.4778, east = 16.7328, south = 49.1322, north = 49.2905;
         private SimpleTimer timer;
         private SimpleTimer hider;
 		private List<VehicleInfo> vehicles;
@@ -46,12 +46,7 @@ namespace VisualDPMB
 			platno.Children.Clear();
 			foreach (var vehicle in vehicles)
 			{
-				var e = new Ellipse
-				{
-					Width = 4,
-					Height = 4,
-					Fill = vehicle.IsTram()?Brushes.Red:vehicle.IsBus()?Brushes.Blue:Brushes.GreenYellow
-				};
+                var e = new Vehicle(vehicle.IsTram() ? Brushes.Red : vehicle.IsBus() ? Brushes.Blue : Brushes.GreenYellow, vehicle.bearing);
                 e.MouseDown += (s, arg) => {
                     vehicle_caption.Visibility = Visibility.Visible;
                     var vi = (from v in vehicles where v.vehicleId == vehicle.vehicleId select v).First();
